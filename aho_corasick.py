@@ -12,8 +12,8 @@ class node:
         suffixes = [self.word[i:] for i in range(1, len(self.word)+1)]
         for suffix in suffixes:
             cur_node = root
-            for letter in suffix:
-                cur_node = cur_node.transitions.get(letter)
+            for symbol in suffix:
+                cur_node = cur_node.transitions.get(symbol)
                 if cur_node is None:
                     break
             else:
@@ -60,7 +60,7 @@ class automaton:
         self.traverse_and_set_dictionary()
     
     def traverse_and_set_failure(self):
-        '''traversal of trie using bfs'''
+        '''Traversal of trie uses bfs.'''
 
         bfs_q: deque[node] = deque()
         bfs_q.appendleft(self.root)
@@ -84,7 +84,7 @@ class automaton:
                     child.set_failure_link(self.root)
 
     def traverse_and_set_dictionary(self):
-        '''traversal of trie using bfs'''
+        '''Traversal of trie uses bfs.'''
 
         bfs_q: deque[node] = deque()
         bfs_q.appendleft(self.root)
@@ -103,7 +103,8 @@ class automaton:
         text_len = len(text)
         if not self.case_sensitive:
             text = text.casefold()
-        for idx in range(text_len+1):
+        idx = 0
+        while True:
             if cur_node.pattern_ending:
                 matches[cur_node.word].append(idx-len(cur_node.word))
             next = cur_node.dictionary_link
@@ -122,6 +123,7 @@ class automaton:
                     next = self.root
                     break
             cur_node = next
+            idx = idx + 1
         
         return matches
 
